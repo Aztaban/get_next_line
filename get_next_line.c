@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/06 13:46:59 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/06 16:58:26 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,15 @@ static char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
-static char	*extract_line(char *stash);
+static char	*extract_line(char *stash)
+{
+		size_t	len;
+
+		len = 0;
+		while (stash[len] && stash[len] != '\n')
+			len++;
+		return (ft_substr(stash, 0, len + 1));
+}
 
 char	*get_next_line(int fd)
 {
@@ -58,6 +66,7 @@ char	*get_next_line(int fd)
 			free(buffer);
 			return (NULL);
 		}
+		buffer[bytes_read];
 		ft_strjoin(stash, buffer); //free the previous stash before returning new one
 	}
 	// after that free the buffer.
@@ -68,3 +77,12 @@ char	*get_next_line(int fd)
 	// before returning the last line free the stash from memory.
 	return (next_line);
 }
+
+/*
+#include <stdio.h>
+int	main(void)
+{
+	char *test_stash = "Hello\n42\nWorld";
+	printf("%s World", extract_line(test_stash));
+}
+*/
