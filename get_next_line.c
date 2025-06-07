@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/07 16:35:02 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/07 17:48:11 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*ft_strjoin_free_stash(char *stash, char const *s2)
 static char	*trim_stash(char *stash)
 {
 	size_t	len;
-	char 	*new_stash;
+	char	*new_stash;
 
 	len = 0;
 	while (stash[len] && stash[len] != '\n')
@@ -52,31 +52,23 @@ static char	*trim_stash(char *stash)
 
 static char	*extract_line(char *stash)
 {
-		size_t	len;
+	size_t	len;
 
-		len = 0;
-		while (stash[len] && stash[len] != '\n')
-			len++;
-		return (ft_substr(stash, 0, len + 1));
+	len = 0;
+	while (stash[len] && stash[len] != '\n')
+		len++;
+	return (ft_substr(stash, 0, len + 1));
 }
 
-/** 
- */
-char	*get_next_line(int fd)
+static char	*fill_stash(int fd, char *stash)
 {
-	static char	*stash;
-	char		*buffer;
-	int			bytes_read;
-	char 		*next_line;
+	char	*buffer;
+	int		bytes_read;
 
-	if (!fd || BUFFER_SIZE <= 0)
-		return (NULL);
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	if (!stash)
-		stash = ft_strdup("");
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -88,7 +80,22 @@ char	*get_next_line(int fd)
 		buffer[bytes_read] = '\0';
 		stash = ft_strjoin_free_stash(stash, buffer);
 	}
-	free(buffer); 
+	free(buffer);
+	return (stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*next_line;
+
+	if (!fd || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!stash)
+		stash = ft_strdup("");
+	stash = fill_stash(fd, stash);
+	if (!stash)
+		return (NULL);
 	next_line = extract_line(stash);
 	stash = trim_stash(stash);
 	return (next_line);
