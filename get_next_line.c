@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/06 18:45:58 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/07 16:35:02 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static char	*extract_line(char *stash)
 		return (ft_substr(stash, 0, len + 1));
 }
 
+/** 
+ */
 char	*get_next_line(int fd)
 {
 	static char	*stash;
@@ -69,16 +71,14 @@ char	*get_next_line(int fd)
 
 	if (!fd || BUFFER_SIZE <= 0)
 		return (NULL);
-	// allocate memory and create buffer.
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	// if the string in stash doesnt contain new line load buffer again and add buffer to stash.
-	// repeat until the stash contains atleast one new line.
+	if (!stash)
+		stash = ft_strdup("");
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
-		// read the fd and store value into buffer.
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
@@ -86,15 +86,11 @@ char	*get_next_line(int fd)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		stash = ft_strjoin_free_stash(stash, buffer); //free the previous stash before returning new one
+		stash = ft_strjoin_free_stash(stash, buffer);
 	}
-	// after that free the buffer.
 	free(buffer); 
-	// if the buffer return empty return NULL and return the last value.(without new line)
-	// extract line from the stash and return it.
 	next_line = extract_line(stash);
 	stash = trim_stash(stash);
-	// before returning the last line free the stash from memory.
 	return (next_line);
 }
 
@@ -113,16 +109,16 @@ int	main(void)
 	free(test_stash);
 }
  */
-/*
+/* 
+#include <stdio.h>
 #include <fcntl.h>
 int	main(void)
 {
 	int fd = open("test.txt", O_RDONLY);
 
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-
+	printf("Line: %s", get_next_line(fd));
+	printf("Line: %s", get_next_line(fd));
+	printf("Line: %s", get_next_line(fd));
+	
 	close(fd);
 } */
