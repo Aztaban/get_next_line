@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:15 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/06 13:47:09 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/07 17:44:22 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 char	*get_next_line(int fd);
 
 // helpers
-size_t	ft_strlen(const char *s);   // always helpful for allocating memory (i hope)
-char	*ft_strchr(const char *s, int c); // find a new line in string
-char	*ft_substr(const char *s, unsigned int start, size_t len); // to extract the return string from stash. 
-char	*ft_strdup(const char *s); // copy the rest of the string as new stack and maybe free the old one???
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
+char	*ft_strdup(const char *s);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 #endif
