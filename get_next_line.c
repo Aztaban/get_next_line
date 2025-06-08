@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/07 17:48:11 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/08 20:31:05 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static char	*extract_line(char *stash)
 static char	*fill_stash(int fd, char *stash)
 {
 	char	*buffer;
+	char	*tmp_stash;
 	int		bytes_read;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
@@ -78,7 +79,13 @@ static char	*fill_stash(int fd, char *stash)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		stash = ft_strjoin_free_stash(stash, buffer);
+		tmp_stash = ft_strjoin_free_stash(stash, buffer);
+		if (!tmp_stash)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		stash = tmp_stash;
 	}
 	free(buffer);
 	return (stash);
@@ -94,8 +101,12 @@ char	*get_next_line(int fd)
 	if (!stash)
 		stash = ft_strdup("");
 	stash = fill_stash(fd, stash);
-	if (!stash)
+	if (!stash || *stash == '\0')
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	next_line = extract_line(stash);
 	stash = trim_stash(stash);
 	return (next_line);
@@ -115,17 +126,26 @@ int	main(void)
 	printf("%s", test_stash);
 	free(test_stash);
 }
- */
-/* 
+*/
+/*
 #include <stdio.h>
 #include <fcntl.h>
 int	main(void)
 {
 	int fd = open("test.txt", O_RDONLY);
+	if (fd < 0)
+		return (1);
 
-	printf("Line: %s", get_next_line(fd));
-	printf("Line: %s", get_next_line(fd));
-	printf("Line: %s", get_next_line(fd));
+	char *line = "";
+	while (line)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break;
+    	printf("Line: %s", line);
+    	free(line);	
+	}
 	
 	close(fd);
+	return (0);
 } */
