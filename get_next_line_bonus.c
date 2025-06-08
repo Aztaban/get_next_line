@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/09 00:36:55 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/09 00:28:59 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,6 @@ static char	*trim_stash(char *stash)
 	}
 	new_stash = ft_strdup(stash + len + 1);
 	free(stash);
-	if (new_stash && *new_stash == '\0')
-	{
-		free(new_stash);
-		return (NULL);
-	}
 	return (new_stash);
 }
 
@@ -91,28 +86,28 @@ static char	*fill_stash(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[1024];
 	char		*next_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(stash);
-		stash = NULL;
+		free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	if (!stash)
-		stash = ft_strdup("");
-	if (!stash)
+	if (!stash[fd])
+		stash[fd] = ft_strdup("");
+	if (!stash[fd])
 		return (NULL);
-	stash = fill_stash(fd, stash);
-	if (!stash || *stash == '\0')
+	stash[fd] = fill_stash(fd, stash[fd]);
+	if (!stash[fd] || *stash[fd] == '\0')
 	{
-		free(stash);
-		stash = NULL;
+		free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	next_line = extract_line(stash);
-	stash = trim_stash(stash);
+	next_line = extract_line(stash[fd]);
+	stash[fd] = trim_stash(stash[fd]);
 	return (next_line);
 }
 
@@ -131,8 +126,8 @@ int	main(void)
 	free(test_stash);
 }
 */
-/* 
-#include <stdio.h>
+
+/* #include <stdio.h>
 #include <fcntl.h>
 int	main(void)
 {
