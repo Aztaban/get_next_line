@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/08 20:31:05 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/08 22:55:37 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static char	*extract_line(char *stash)
 static char	*fill_stash(int fd, char *stash)
 {
 	char	*buffer;
-	char	*tmp_stash;
 	int		bytes_read;
 
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
@@ -79,13 +78,7 @@ static char	*fill_stash(int fd, char *stash)
 			return (NULL);
 		}
 		buffer[bytes_read] = '\0';
-		tmp_stash = ft_strjoin_free_stash(stash, buffer);
-		if (!tmp_stash)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		stash = tmp_stash;
+		stash = ft_strjoin_free_stash(stash, buffer);
 	}
 	free(buffer);
 	return (stash);
@@ -95,12 +88,15 @@ char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*next_line;
+	char		*input;
 
-	if (!fd || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!stash)
-		stash = ft_strdup("");
-	stash = fill_stash(fd, stash);
+		input = "";
+	else
+		input = stash;
+	stash = fill_stash(fd, input);
 	if (!stash || *stash == '\0')
 	{
 		free(stash);
@@ -127,15 +123,14 @@ int	main(void)
 	free(test_stash);
 }
 */
-/*
-#include <stdio.h>
+
+/* #include <stdio.h>
 #include <fcntl.h>
 int	main(void)
 {
 	int fd = open("test.txt", O_RDONLY);
 	if (fd < 0)
 		return (1);
-
 	char *line = "";
 	while (line)
 	{
