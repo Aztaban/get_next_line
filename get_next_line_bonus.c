@@ -6,11 +6,11 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/09 00:28:59 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/09 22:24:39 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_strjoin_free_stash(char *stash, char const *s2)
 {
@@ -86,7 +86,7 @@ static char	*fill_stash(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[1024];
+	static char	*stash[MAX_FD];
 	char		*next_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)

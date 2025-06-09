@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:15 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/08 23:01:19 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/09 22:24:07 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
-# include <stdlib.h> 
+# include <stdlib.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
+
+# define MAX_FD 1024
 
 char	*get_next_line(int fd);
 
