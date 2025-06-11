@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:15 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/07 17:44:22 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/11 16:53:13 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 # include <unistd.h>
 # include <stdlib.h> 
+# include <stdio.h> 
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10
 # endif
 
 char	*get_next_line(int fd);

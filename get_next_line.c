@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/10 20:16:44 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/11 17:43:32 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,14 @@ static char	*ft_strjoin_free_stash(char *stash, char const *s2)
 		return (NULL);
 	len1 = ft_strlen(stash);
 	len2 = ft_strlen(s2);
+	// printf("malloc a\n");
 	result = (char *)malloc(len1 + len2 + 1);
 	if (!result)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	ft_memcpy(result, stash, len1);
 	ft_memcpy(result + len1, s2, len2);
 	result[len1 + len2] = '\0';
@@ -108,9 +113,14 @@ char	*get_next_line(int fd)
 		stash = NULL;
 		return (NULL);
 	}
+	// printf("malloc b\n");
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	stash = fill_stash(fd, stash, buffer);
 	free(buffer);
 	if (!stash || *stash == '\0')
@@ -120,6 +130,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	next_line = extract_line(stash);
+	if (!next_line)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	stash = trim_stash(stash);
 	return (next_line);
 }

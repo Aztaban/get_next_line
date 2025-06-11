@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:37:40 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/03 11:02:30 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/11 17:00:49 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ char	*ft_strdup(const char *s1)
 	char	*dup;
 
 	len = ft_strlen(s1) + 1;
+	// printf("malloc c\n");
 	dup = (char *)malloc((len) * sizeof(char));
 	if (!dup)
 		return (NULL);
@@ -79,6 +80,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (len > s_len - start)
 		len = s_len - start;
+	// printf("malloc d\n");
 	substr = (char *)malloc(sizeof(char) * (len + 1));
 	if (!substr)
 		return (NULL);
