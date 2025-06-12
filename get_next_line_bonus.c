@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/12 02:41:15 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/12 02:53:05 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ static char	*extract_and_trim(char **stash)
 		return (free_stash(stash), line);
 	new_stash = ft_strdup(*stash + len);
 	if (!new_stash || *new_stash == '\0')
-		return (free(new_stash), free_stash(stash), line);
+	{
+		free(new_stash);
+		return (free_stash(stash), line);
+	}
 	free(*stash);
 	*stash = new_stash;
 	return (line);
@@ -84,7 +87,8 @@ static void	fill_stash(int fd, char **stash, char *buffer)
 		if (bytes_read <= 0)
 			break ;
 		buffer[bytes_read] = '\0';
-		ft_strjoin_free_stash(stash, buffer);
+		if (bytes_read > 0)
+			ft_strjoin_free_stash(stash, buffer);
 		if (!*stash)
 			return ;
 	}
