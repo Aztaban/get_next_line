@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/12 02:24:21 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/12 02:36:13 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,35 +64,30 @@ static char	*extract_and_trim(char **stash)
 		return (free_stash(stash), line);
 	new_stash = ft_strdup(*stash + len);
 	if (!new_stash || *new_stash == '\0')
-	{
-		free(new_stash);
-		free_stash(stash);
-		return (line);
-	}
+		return (free(new_stash), free_stash(stash), line);
 	free(*stash);
 	*stash = new_stash;
 	return (line);
 }
 
-static char	*fill_stash(int fd, char *stash, char *buffer)
+static void	fill_stash(int fd, char **stash, char *buffer)
 {
 	int		bytes_read;
 
-	if (!stash)
-		stash = ft_strdup("");
-	if (!stash)
-		return (NULL);
-	while (!ft_strchr(stash, '\n'))
+	if (!*stash)
+		*stash = ft_strdup("");
+	if (!*stash)
+		return ;
+	while (!ft_strchr(*stash, '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read <= 0)
 			break ;
 		buffer[bytes_read] = '\0';
-		ft_strjoin_free_stash(&stash, buffer);
-		if (!stash)
-			return (NULL);
+		ft_strjoin_free_stash(stash, buffer);
+		if (!*stash)
+			return ;
 	}
-	return (stash);
 }
 
 char	*get_next_line(int fd)
@@ -106,7 +101,7 @@ char	*get_next_line(int fd)
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (free_stash(&stash));
-	stash = fill_stash(fd, stash, buffer);
+	fill_stash(fd, &stash, buffer);
 	free(buffer);
 	if (!stash || *stash == '\0')
 		return (free_stash(&stash));
