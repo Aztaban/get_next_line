@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/12 02:57:10 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/18 14:45:12 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 static void	*free_stash(char **stash)
 {
 	if (stash && *stash)
+	{
 		free(*stash);
-	if (stash)
 		*stash = NULL;
+	}
 	return (NULL);
 }
 
@@ -27,22 +28,21 @@ static void	ft_strjoin_free_stash(char **stash, char const *s2)
 	size_t	len1;
 	size_t	len2;
 
+	if (!s2)
+		return ;
 	if (!*stash)
 		*stash = ft_strdup("");
-	if (!*stash || !s2)
+	if (!*stash)
 		return ;
 	len1 = ft_strlen(*stash);
 	len2 = ft_strlen(s2);
 	result = (char *)malloc(len1 + len2 + 1);
 	if (!result)
-	{
-		free_stash(stash);
-		return ;
-	}
+		return ((void)free_stash(stash));
 	ft_memcpy(result, *stash, len1);
 	ft_memcpy(result + len1, s2, len2);
 	result[len1 + len2] = '\0';
-	free(*stash);
+	free_stash(stash);
 	*stash = result;
 }
 
@@ -52,23 +52,23 @@ static char	*extract_and_trim(char **stash)
 	char	*line;
 	char	*new_stash;
 
-	len = 0;
 	if (!*stash || **stash == '\0')
 		return (NULL);
+	len = 0;
 	while ((*stash)[len] && (*stash)[len] != '\n')
 		len++;
 	if ((*stash)[len] == '\n')
 		len++;
 	line = ft_substr(*stash, 0, len);
-	if (!(*stash)[len])
-		return (free_stash(stash), line);
+	if (!line)
+		return (free_stash(stash));
 	new_stash = ft_strdup(*stash + len);
+	free_stash(stash);
 	if (!new_stash || *new_stash == '\0')
 	{
-		free(new_stash);
-		return (free_stash(stash), line);
+		free_stash(&new_stash);
+		return (line);
 	}
-	free(*stash);
 	*stash = new_stash;
 	return (line);
 }
@@ -77,14 +77,16 @@ static void	fill_stash(int fd, char **stash, char *buffer)
 {
 	int		bytes_read;
 
-	if (!*stash)
-		*stash = ft_strdup("");
-	if (!*stash)
-		return ;
-	while (!ft_strchr(*stash, '\n'))
+	bytes_read = 1;
+	while (bytes_read > 0 && (!*stash || !ft_strchr(*stash, '\n')))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read <= 0)
+		if (bytes_read < 0)
+		{
+			free_stash(stash);
+			return ;
+		}
+		if (bytes_read == 0)
 			break ;
 		buffer[bytes_read] = '\0';
 		ft_strjoin_free_stash(stash, buffer);
@@ -109,8 +111,6 @@ char	*get_next_line(int fd)
 	if (!stash || *stash == '\0')
 		return (free_stash(&stash));
 	next_line = extract_and_trim(&stash);
-	if (!next_line)
-		return (free_stash(&stash));
 	return (next_line);
 }
 
@@ -140,13 +140,13 @@ int	main(void)
 	char *line = "";
 	while (line)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(42);
 		if (!line)
 			break;
     	printf("Line: %s", line);
-    	free(line);	
+    	//free(line);	
 	}
 	
-	close(fd);
+	//close(fd);
 	return (0);
-} */
+}  */
