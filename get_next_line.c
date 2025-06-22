@@ -6,7 +6,7 @@
 /*   By: mjusta <mjusta@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 17:41:24 by mjusta            #+#    #+#             */
-/*   Updated: 2025/06/18 14:45:12 by mjusta           ###   ########.fr       */
+/*   Updated: 2025/06/22 14:07:27 by mjusta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*next_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (free_stash(&stash));
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -114,21 +114,6 @@ char	*get_next_line(int fd)
 	return (next_line);
 }
 
-/* 
-#include <stdio.h>
-int	main(void)
-{
-	char *test_stash = ft_strdup("Hello\n42\nWorld");
-	//char *str = " of Warcraft";
-	//printf("%s World", extract_line(test_stash));
-
-	test_stash = trim_stash(test_stash);
-	
-	//test_stash = ft_strjoin_free_stash(test_stash, str);
-	printf("%s", test_stash);
-	free(test_stash);
-}
-*/
 /* 
 #include <stdio.h>
 #include <fcntl.h>
